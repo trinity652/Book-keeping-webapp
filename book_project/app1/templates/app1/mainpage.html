@@ -32,7 +32,7 @@
     <script src="{% static "app1/js/require.min.js" %}"></script>
     <script>
     pre_data={'ISBN': '', 'Title': '', 'Publisher': " ", 'Author': '', 'Copies':''}
-    /* Formatting function for row details - modify as you need */
+    /* Formatting function for row details - modify as you need 
     function format ( d ) {
         // `d` is the original data object for the row
         return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
@@ -41,7 +41,7 @@
                 '<td>'+d.Custom_Subject__c+'</td>'+
             '</tr>'+
         '</table>';
-    }
+    }*/
     var myVariables={};
     $(document).ready(function() {
         myVariables.table=$('#myTable').DataTable( {
@@ -140,7 +140,7 @@
                           <div class="col-md-6 col-lg-4">
                               <div class="form-group" id="search_term">
                                 <label class="form-label" >Enter the search field</label>
-                                <input type="text" class="form-control" name="search-query" placeholder="Search Term">
+                                <input type="text" class="form-control" name="search-query" placeholder="Name of Book">
                               </div>
                           </div>
                         </div>
