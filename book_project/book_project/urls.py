@@ -18,4 +18,7 @@ from django.urls import path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-]
+    path('queryapp/', include('queryapp.urls')),
+    
+]+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+

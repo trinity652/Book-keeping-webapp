@@ -1,0 +1,402 @@
+{% extends "queryapp/base.html" %}
+{% load static %}
+{% block head %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Content-Language" content="en" />
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="theme-color" content="#4188c9">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <title>Case Query Tool</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
+    <link href="{% static "queryapp/css/dashboard.css" %}" rel="stylesheet" />
+    <script src="{% static "queryapp/js/dashboard.js" %}"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <style>
+    td.details-control {
+    background: url("{% static "queryapp/images/details_open.png" %}") no-repeat center center;
+    cursor: pointer;
+    }
+    tr.shown td.details-control {
+        background: url("{% static "queryapp/images/details_close.png" %}") no-repeat center center;
+    }
+    </style>
+    <script src="{% static "queryapp/js/require.min.js" %}"></script>
+    <script>
+    pre_data={'Status': '', 'CaseNumber': '', 'Description': " ", 'CreatedDate': '', 'Account': {'Name': '', 'attributes': {'url': '', 'type': ''}}, 'CaseOwnerNickname__c': '', 'JIRA_Ticket_Id__c': '', 'Severity__c': '', 'attributes': {'url': '', 'type': ''}}
+    /* Formatting function for row details - modify as you need */
+    function format ( d ) {
+        // `d` is the original data object for the row
+        return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+            '<tr>'+
+                '<td>Subject:</td>'+
+                '<td>'+d.Custom_Subject__c+'</td>'+
+            '</tr>'+
+        '</table>';
+    }
+    var myVariables={};
+    $(document).ready(function() {
+        myVariables.table=$('#myTable').DataTable( {
+        data:pre_data,
+        columns: [
+            {
+                "className":      'details-control',
+                "orderable":      false,
+                "data":           null,
+                "defaultContent": ''
+            },
+            { data: 'CaseNumber' },
+            { data: 'CaseOwnerNickname__c' },
+            { data: 'Account' },
+            { data: 'Severity_for_Internal_User__c' },
+            { data: 'Status' },
+            { data: 'Ticket Id'},
+            { data: 'CreatedDate'}
+
+    ]
+    } );
+
+    $('#myTable tbody').on('click', 'td.details-control', function () {
+        var tr = $(this).closest('tr');
+        var row = myVariables.table.row( tr );
+ 
+        if ( row.child.isShown() ) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+            // Open this row
+            row.child( format(row.data()) ).show();
+            tr.addClass('shown');
+        }
+    } );
+
+    } );
+    
+    var addData=function (json_data) {
+        myVariables.table.rows.add(json_data).draw();
+
+   }
+    
+    function remtable(val)
+    {
+      myVariables.table.clear(); 
+    }
+    function CheckField(val)
+    {
+      var element1=document.getElementById('search_term');
+      var element2=document.getElementById('status');
+      var element3=document.getElementById('severity');
+      var element4=document.getElementById('date_range1');
+      var element5=document.getElementById('date_range2');
+      myVariables.table.clear();  
+      if(val=="Case_Owner" || val=="Customer")
+      {
+        element1.style.display='block';
+        element2.style.display='none';
+        element3.style.display='none';
+        element4.style.display='block';
+        element5.style.display='block';
+      }
+      else if(val=="Case_Number"||  val=="JIRA_ticket")
+      {
+        element1.style.display='block';
+        element2.style.display='none';
+        element3.style.display='none';
+        element4.style.display='none';
+        element5.style.display='none';
+        
+      }
+      else if(val=='Status')
+      {
+        element1.style.display='none';
+        element2.style.display='block';
+        element3.style.display='none';
+        element4.style.display='block';
+        element5.style.display='block';
+      
+      }
+      else if(val=='Severity')
+      {
+        element1.style.display='none';
+        element2.style.display='none';
+        element3.style.display='block';
+        element4.style.display='block';
+        element5.style.display='block';
+      
+      }
+      
+  }
+  function fetchdata() 
+  {
+      var Field= document.forms["form"]["Query-field"];
+      if(Field.value=="Case_Number")
+      {
+          var CaseNumber = document.forms["form"]["search-query"];
+          var str1="http://10.52.2.126:8000/queryapp/casenumber/";
+          var res = str1.concat(CaseNumber.value);
+          $.ajax({
+          dataType: "json",
+          url: res,
+          success: addData
+          
+      });
+      }           
+      else if(Field.value=="Case_Owner")
+      {
+          var CaseOwner = document.forms["form"]["search-query"];
+          var date_range1 = document.forms["form"]["from"];
+          var date_range2 = document.forms["form"]["to"];
+          var str1="http://10.52.2.126:8000/queryapp/caseowner/";
+          var res = str1.concat(CaseOwner.value);
+          res=res.concat("/")
+          res=res.concat(date_range1.value)
+          res=res.concat("/")
+          res=res.concat(date_range2.value)
+          $.ajax({
+          dataType: "json",
+          url: res,
+          success: addData
+          
+      });
+      }
+      else if(Field.value=="Customer")
+      {
+          var Customer = document.forms["form"]["search-query"];
+          var date_range1 = document.forms["form"]["from"];
+          var date_range2 = document.forms["form"]["to"];
+          var str1="http://10.52.2.126:8000/queryapp/customerid/";
+          var res = str1.concat(Customer.value);
+          res=res.concat("/")
+          res=res.concat(date_range1.value)
+          res=res.concat("/")
+          res=res.concat(date_range2.value)
+          $.ajax({
+          dataType: "json",
+          url: res,
+          success: addData
+          
+      });
+      }
+      else if(Field.value=="JIRA_ticket")
+      {
+          var jiraticket = document.forms["form"]["search-query"];
+          var str1="http://10.52.2.126:8000/queryapp/jiraticket/";
+          var res = str1.concat(jiraticket.value);
+          $.ajax({
+          dataType: "json",
+          url: res,
+          success: addData
+          
+      });
+      }
+      else if(Field.value=="Status")
+      {
+          var status = document.forms["form"]["status-radio"];
+          var date_range1 = document.forms["form"]["from"];
+          var date_range2 = document.forms["form"]["to"];
+          var str1="http://10.52.2.126:8000/queryapp/casestatus/";
+          var res = str1.concat(status.value);
+          res=res.concat("/")
+          res=res.concat(date_range1.value)
+          res=res.concat("/")
+          res=res.concat(date_range2.value)
+          $.ajax({
+          dataType: "json",
+          url: res,
+          success: addData
+          
+      });
+      }
+      else if(Field.value=="Severity")
+      {
+          var status = document.forms["form"]["severity_field"];
+          var date_range1 = document.forms["form"]["from"];
+          var date_range2 = document.forms["form"]["to"];
+          var str1="http://10.52.2.126:8000/queryapp/caseseverity/";
+          var res = str1.concat(status.value);
+          res=res.concat("/")
+          res=res.concat(date_range1.value)
+          res=res.concat("/")
+          res=res.concat(date_range2.value)
+          $.ajax({
+          dataType: "json",
+          url: res,
+          success: addData
+          
+      });
+      }
+      
+      return false;             
+    }
+</script>
+{% endblock %}
+{% block content %}
+    <div class="page">
+      <div class="page-main">
+        <div class="header py-4">
+          <div class="container">
+            <div class="d-flex">
+              <a class="header-brand" href="">
+                <img src="{% static "/queryapp/images/logo.png" %}" class="header-brand-img" alt="tabler logo">
+              </a>
+              <div class="d-flex order-lg-2 ml-auto">
+                <div class="nav-item d-none d-md-flex">
+              </div>
+              <div class="dropdown">
+                  <a class="nav-link pr-0 leading-none" data-toggle="dropdown">
+                    <span class="avatar" style="background-image: url("{% static "queryapp/images/25.jpg" %}")"></span>
+                    <span class="ml-2 d-none d-lg-block">
+                      <span id="header-text">Jane Pearson</span>
+                    </span>
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                    <a class="dropdown-item" href="#">
+                      <i class="dropdown-icon fe fe-log-out"></i> Sign out
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <a href="#" class="header-toggler d-lg-none ml-3 ml-lg-0" data-toggle="collapse" data-target="#headerMenuCollapse">
+                <span class="header-toggler-icon"></span>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="my-3 my-md-5">
+          <div class="container">
+              <div class="row">
+                  <div class="col-12">
+                    <form onsubmit="return fetchdata()" class="card" name="form">
+                      <div class="card-header">
+                        <h3 class="card-title">Search form</h3>
+                      </div>
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-md-6 col-lg-4">
+                              <div class="form-group">
+                                  <label class="form-label">Search By</label>
+                                  <select name="Query-field" id="select-users" class="form-control custom-select" onchange="CheckField(this.value);" >
+                                    <option value="Case_Number">Case Number</option>
+                                    <option value="Case_Owner">Case Owner</option>
+                                    <option value="Customer">Customer Name</option>
+                                    <option value="JIRA_ticket">JIRA ticket</option>
+                                    <option value="Status">Status</option>
+                                    <option value="Severity">Severity</option>
+                                  </select>
+                              </div>
+                              <div class="form-group" id="search_term">
+                                <label class="form-label" >Enter the search field</label>
+                                <input type="text" class="form-control" name="search-query" placeholder="Seach Term">
+                              </div>
+                              <div class="form-group" id="status" style='display:none;'>
+                                  <div class="form-label" >Case Status</div>
+                                  <div class="custom-controls-stacked">
+                                    <label class="custom-control custom-radio">
+                                      <input type="radio" class="custom-control-input" name="status-radio" value="open" onchange="remtable(this.value);"checked>
+                                      <div class="custom-control-label">Open</div>
+                                    </label>
+                                    <label class="custom-control custom-radio">
+                                      <input type="radio" class="custom-control-input" name="status-radio" onchange="remtable(this.value);" value="closed">
+                                      <div class="custom-control-label">Closed</div>
+                                    </label>
+                                  </div>
+                              </div>
+                              <div class="form-group" id="severity" style='display:none;'>
+                                <label class="form-label" >Severity</label>
+                                <select name="severity_field" class="form-control custom-select" onchange="remtable(this.value);">
+                                  <option value="Severity 1">Severity 1</option>
+                                  <option value="Severity 2">Severity 2</option>
+                                  <option value="Severity 3">Severity 3</option>
+                                  <option value="Severity 4">Severity 4</option>
+                                </select>
+                              </div>
+                              
+                              <div class="form-group" id="date_range1" style='display:none;'>
+                                  <label class="form-label">Date Range:</label>
+                                  <label class="form-label" >From</label>
+                                  <input type="date" name="from" onchange="remtable(this.value);">
+                              </div>
+                              <div class="form-group" id="date_range2" style='display:none;'>
+                                  <label class="form-label" >To</label>
+                                  <input type="date" name="to" onchange="remtable(this.value);">
+                              </div>
+
+                          </div>
+                      <div class="col-md-6 col-lg-4">
+                      </div>
+                      <div class="col-md-6 col-lg-4">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer text-right">
+                    <div class="d-flex">
+                      <a href="javascript:void(0)" class="btn btn-link">Cancel</a>
+                      <button type="submit" class="btn btn-primary ml-auto">Send data</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            
+            <div class="page-header">
+              <h1 class="page-title">
+                Cases
+              </h1>
+            </div>
+            <div class="card">
+              <table class="table card-table" id="myTable">
+              <thead>
+              <tr>
+                  <th></th>
+                  <th>Case Number</th>
+                  <th>Case Owner</th>
+                  <th>Customer</th>
+                  <th>Severity</th>
+                  <th>Status</th>
+                  <th>JIRA Ticket</th>
+                  <th>Date Opened</th>
+             </tr>
+             </thead>
+              <tbody>
+              </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="footer">
+        <div class="container">
+          <div class="row align-items-center flex-row-reverse">
+            <div class="col-auto ml-lg-auto">
+              <div class="row align-items-center">
+                <div class="col-auto">
+                  <ul class="list-inline list-inline-dots mb-0">
+                    <li class="list-inline-item"><a href="https://avinetworks.com/docs/">Documentation</a></li>
+                    <li class="list-inline-item"><a href="https://avinetworks.com/docs/18.1/faq/">FAQ</a></li>
+                  </ul>
+                </div>
+                <div class="col-auto">
+                  
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-lg-auto mt-3 mt-lg-0 text-center">
+              Copyright © 2019 <a href=".">Avi Networks</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+{% endblock %}
+
+
