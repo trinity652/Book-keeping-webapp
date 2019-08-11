@@ -8,7 +8,27 @@ from django.http import JsonResponse
 from django.core import serializers
 from django.conf import settings
 import json
-from .forms import MyForm
 from rest_framework.renderers import JSONRenderer
 from datetime import datetime
 
+def MainPage(request):
+    return render(request,'app1/mainpage.html')
+
+
+def BookLookUp(BookName):
+#Function to lookup for the book in database
+    pass
+
+def APIBookLookup(BookName):
+#Function to lookup for the book through API and populate the db
+    pass
+
+
+
+def ViewLookBook(request,BookName):
+    pass
+#Do a book look up
+#Store the same in db
+#Maintain a dictionary of stuff you want rendered
+#return response
+#return Response

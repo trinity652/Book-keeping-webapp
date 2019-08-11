@@ -7,5 +7,6 @@ class Book(models.Model):
     """
     title = models.CharField(max_length=200)
     ISBN = models.CharField(max_length=200)
-    publisher = models.ForeignKey('Publisher')
-    author = models.ForeignKey('Author')
+    publisher = models.CharField(max_length=200)
+    author = models.CharField(max_length=200)
+    copies=models.IntegerField()
