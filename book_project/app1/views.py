@@ -47,9 +47,9 @@ def ViewLookBook(request,BookName):
         a["copies"]=BookLookUp(val["id"])
         Items.append(a)
     
-    newItems=map(dict, Items)
+    #newItems=map(dict, Items)
     print(Items)
-    return Response(newItems)
+    return JsonResponse(Items,safe=False)
 
     
 
