@@ -47,7 +47,7 @@ def ViewLookBook(request,BookName):
         a["author"]=val["volumeInfo"]["authors"][0]
         a["copies"]=BookLookUp(val["id"])
         Items.append(a)
-    return Response(json.loads(Items))
+    return JsonResponse(Items,safe=False)
 
 
     
