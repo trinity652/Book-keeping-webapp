@@ -36,10 +36,14 @@ def ViewLookBook(request,BookName):
     result = json.loads(r.content)
     for val in result["items"]:
         a={}
-        a["Id"]=val["id"]
-        a["title"]=val["volumeInfo"]["title"]
-        a["publisher"]=val["volumeInfo"]["publisher"]
-        a["author"]=val["volumeInfo"]["authors"][0]
+        if "id" in val:
+            a["Id"]=val["id"]
+        if "title" in val["volumeInfo"]:
+            a["title"]=val["volumeInfo"]["title"]
+        if "publisher" in val["volumeInfo"]:
+            a["publisher"]=val["volumeInfo"]["publisher"]
+        if "authors" in val["volumeInfo"]:
+            a["author"]=val["volumeInfo"]["authors"][0]
         a["copies"]=BookLookUp(val["id"])
         Items.append(a)
     
