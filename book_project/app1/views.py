@@ -26,14 +26,9 @@ def BookLookUp(BookId):
     except:
         return 0
 
-
-
-
 @api_view(['GET',])
 @renderer_classes((JSONRenderer,))
 def ViewLookBook(request,BookName):
-    print(BookName)
-    #https://www.googleapis.com/books/v1/volumes?q=flowers+inauthor:keyes&key=AIzaSyB4d9wa95P9Di_-hEQ4kuuarpqy09NDC_8
     Items=[]
     BASE_URL="https://www.googleapis.com/books/v1/volumes?"
     api_key="AIzaSyB4d9wa95P9Di_-hEQ4kuuarpqy09NDC_8"
@@ -47,8 +42,10 @@ def ViewLookBook(request,BookName):
         a["author"]=val["volumeInfo"]["authors"][0]
         a["copies"]=BookLookUp(val["id"])
         Items.append(a)
-    return JsonResponse(Items,safe=False)
-
+    
+    newItems=map(dict, Items)
+    print(Items)
+    return Response(newItems)
 
     
 
