@@ -31,7 +31,7 @@
     </style>
     <script src="{% static "app1/js/require.min.js" %}"></script>
     <script>
-    pre_data={'Id': '', 'title': '', 'publisher': " ", 'author': '', 'copies':''}
+    pre_data={'Id': '', 'title': '', 'publisher': '', 'author': '', 'copies':''}
     /* Formatting function for row details - modify as you need 
     function format ( d ) {
         // `d` is the original data object for the row
@@ -82,7 +82,7 @@
     } );
     
   var addData=function (json_data) {
-        myVariables.table.rows.add(json_data).draw();
+      myVariables.table.rows.add(json_data).draw();
 
    }
     
