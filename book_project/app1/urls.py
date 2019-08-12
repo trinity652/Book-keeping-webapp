@@ -4,5 +4,5 @@ app_name = 'app1'
 
 urlpatterns = [
 	path('mainpage/', views.MainPage),
-	path('bookname/<slug:BookName>', views.ViewLookBook),
+	re_path(r'^results/(?P<BookName>.*)/$', views.ViewLookBook),
 ]

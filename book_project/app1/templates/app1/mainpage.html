@@ -86,11 +86,23 @@
 
    }
     
-    function remtable(val)
-    {
-      myVariables.table.clear(); 
-    }
+  function remtable(val)
+  {
+    myVariables.table.clear(); 
+  }
     
+  function fetchdata() 
+  {
+    var Field= document.forms["form"]["search-query"];
+    var str1="http://127.0.0.1:8000/app1/results/";
+    var res = str1.concat(Field.value);
+    $.ajax({
+    dataType: "json",
+    url: res,
+    success: addData
+        
+    });
+    }
     
 </script>
 {% endblock %}
@@ -106,7 +118,15 @@
               <div class="d-flex order-lg-2 ml-auto">
                 <div class="nav-item d-none d-md-flex">
               </div>
-              
+              <div class="dropdown">
+                  
+                  <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                    <a class="dropdown-item" href="#">
+                      <i class="dropdown-icon fe fe-log-out"></i> Sign out
+                    </a>
+                  </div>
+                </div>
+              </div>
               <a href="#" class="header-toggler d-lg-none ml-3 ml-lg-0" data-toggle="collapse" data-target="#headerMenuCollapse">
                 <span class="header-toggler-icon"></span>
               </a>
@@ -118,7 +138,7 @@
           <div class="container">
               <div class="row">
                   <div class="col-12">
-                    <form onsubmit="return fetchdata()" class="card" name="form">
+                    <form class="card" onsubmit="return fetchdata()" name="form">
                       <div class="card-header">
                         <h3 class="card-title">Search form</h3>
                       </div>
@@ -151,15 +171,12 @@
               <table class="table card-table" id="myTable">
               <thead>
               <tr>
-                  
-                  
                   <th>ISBN</th>
                   <th>Title</th>
                   <th>Publisher</th>
                   <th>Author</th>
                   <th>Copies</th>
-                  
-             </tr>
+              </tr>
              </thead>
               <tbody>
               </tbody>
