@@ -55,7 +55,7 @@
   function fetchdata() 
   {
     var Field= document.forms["form"]["search-query"];
-    var str1="http://localhost:8000/app1/results/";
+    var str1="results/";
     var res = str1.concat(Field.value);
     res=res.concat("/")
     $.ajax({
