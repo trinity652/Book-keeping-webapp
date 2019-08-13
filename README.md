@@ -6,7 +6,7 @@
 
 3. Run the comand : python manage.py runserver
 
-4. The page which serves book list: http://127.0.0.1:8000/app1/mainpage/ . The search query goes through the list of dictinaries of books and renders it into the webpage in a table format. Enable cross-origin source sharing on your browser for http://127.0.0.1:8000/app1/results/*
+4. The page which serves book list: http://127.0.0.1:8000/app1/mainpage/ . The search query goes through the list of dictionaries of books and renders it into the webpage in a table format. Enable cross-origin source sharing on your browser for http://127.0.0.1:8000/app1/results/*
 
 5. The admin page can be created using : python manage.py createsuperuser. Once admin page is created, we have books models, to which new books can be added, updated and deleted, http://127.0.0.1:8000/admin/
 
