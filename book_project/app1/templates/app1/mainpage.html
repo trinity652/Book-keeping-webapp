@@ -47,7 +47,7 @@
 
    }
     
-  function remtable(val)
+  function remtable()
   {
     myVariables.table.clear(); 
   }
@@ -110,7 +110,7 @@
                           <div class="col-md-6 col-lg-4">
                               <div class="form-group" id="search_term">
                                 <label class="form-label" >Enter the search field</label>
-                                <input type="text" class="form-control" name="search-query" placeholder="Name of Book" onchange="remtable(this.value)">
+                                <input type="text" class="form-control" name="search-query" placeholder="Name of Book" onchange="remtable()">
                               </div>
                           </div>
                         </div>
@@ -118,7 +118,7 @@
                               
                       <div class="card-footer text-right">
                         <div class="d-flex">
-                          <button type="submit" class="btn btn-primary ml-auto">Send data</button>
+                          <button type="submit" class="btn btn-primary ml-auto" onclick="remtable()">Send data</button>
                         </div>
                       </div>
                   
