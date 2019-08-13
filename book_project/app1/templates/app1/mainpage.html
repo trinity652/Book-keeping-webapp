@@ -20,39 +20,15 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
-    <style>
-    td.details-control {
-    background: url("{% static "app1/images/details_open.png" %}") no-repeat center center;
-    cursor: pointer;
-    }
-    tr.shown td.details-control {
-        background: url("{% static "app1/images/details_close.png" %}") no-repeat center center;
-    }
-    </style>
+    
     <script src="{% static "app1/js/require.min.js" %}"></script>
     <script>
     pre_data={'Id': '', 'title': '', 'publisher': '', 'author': '', 'copies':''}
-    /* Formatting function for row details - modify as you need 
-    function format ( d ) {
-        // `d` is the original data object for the row
-        return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-            '<tr>'+
-                '<td>Subject:</td>'+
-                '<td>'+d.Custom_Subject__c+'</td>'+
-            '</tr>'+
-        '</table>';
-    }*/
     var myVariables={};
     $(document).ready(function() {
         myVariables.table=$('#myTable').DataTable( {
         data:pre_data,
         columns: [
-            {
-                "className":      'details-control',
-                "orderable":      false,
-                "data":           null,
-                "defaultContent": ''
-            },
             { data: 'Id' },
             { data: 'title' },
             { data: 'publisher' },
