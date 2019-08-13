@@ -64,6 +64,7 @@
     success: addData
         
     });
+    return false;
   }
     
 </script>
@@ -109,7 +110,7 @@
                           <div class="col-md-6 col-lg-4">
                               <div class="form-group" id="search_term">
                                 <label class="form-label" >Enter the search field</label>
-                                <input type="text" class="form-control" name="search-query" placeholder="Name of Book">
+                                <input type="text" class="form-control" name="search-query" placeholder="Name of Book" onchange="remtable(this.value)">
                               </div>
                           </div>
                         </div>
